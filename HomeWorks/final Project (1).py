@@ -1,42 +1,9 @@
-from tkinter import *
-from tkinter.messagebox import *
-import tkinter as tk
+
 from random import *
-from PIL import Image, ImageTk
+from tkinter import *
+from PIL import ImageTk, Image
 
-class PinPage(Frame):
-    def __init__(self, master=None):
-        super().__init__(master)
-        self.master = master
-        self.master.title("Poveseniy")
-        self.master.config(bg='#faf2d5')
-        self.master.geometry('220x100')
-        self.widgets()
-
-    def Next(self):
-        next = self.pin_code.get()
-        if next == '1234':
-            self.master.withdraw()
-            self.new_MainPage = Toplevel(self.master)
-            self.mainpage = Viselnik(self.new_MainPage)
-        else:
-            showinfo(title="Wrong Data", message="Incorrect PIN")
-
-    def Exit(self):
-        self.master.withdraw()
-
-    def widgets(self):
-        welcome = Label(self.master, text='Enter pin code', font=("Open Sans", 12)).grid(row=1, column=2)
-
-        self.pin_code = Entry(self.master, justify=CENTER, bd=4)
-        self.pin_code.grid(row=2, column=2)
-
-        self.btn_next = Button(self.master, text='Next', command=self.Next, font=("Open Sans", 12))
-        self.btn_next.grid(row=3, column=1, sticky=W)
-        self.btn_exit = Button(self.master, text="Exit", command=self.Exit, font=("Open Sans", 12))
-        self.btn_exit.grid(row=3,column=3, sticky=E)
-
-class Viselnik(Frame):
+class MainMenu(Frame):
 
     # Список слов для угадывания
     words = ['python', 'programming', 'computer', 'code', 'algorithm', 'debugging']
@@ -46,19 +13,12 @@ class Viselnik(Frame):
     word = choice(words)
     # Список угаданных букв
     guessed_letters = []
-    # Количество картинок
-    images = [r'D:\Python works\Lessons\ves.png',
-              r'D:\Python works\Lessons\ves1.png',
-              r'D:\Python works\Lessons\ves2.png',
-              r'D:\Python works\Lessons\ves3.png',
-              r'D:\Python works\Lessons\ves4.png',
-              r'D:\Python works\Lessons\ves5.jpg']
 
     def __init__(self,master = None):
         super().__init__(master)
         self.master1 = master
         self.master1.title('Виселица')
-        self.master1.geometry('800x400')
+        self.master1.geometry('800x700')
         self.master1.resizable(False, False)
         self.master1['bg'] = '#DCDCDC'
         self.create_widgets()
@@ -67,7 +27,7 @@ class Viselnik(Frame):
     def create_widgets(self):
 
         # Load the image of the hangman
-        self.hangman_image = ImageTk.PhotoImage(Image.open(r'D:\Python works\Lessons\ves.png').resize((200, 200)))
+        self.hangman_image = ImageTk.PhotoImage(Image.open("hangman.png").resize((200, 200)))
         self.label_hangman = Label(self.master1, image=self.hangman_image)
         self.label_hangman.pack()
 
@@ -105,14 +65,14 @@ class Viselnik(Frame):
             if self.tries == 0:
                 self.label_result.config(text=f'Вы проиграли! Загаданное слово: {self.word}')
                 # Update the hangman image
-                self.hangman_image = ImageTk.PhotoImage(Image.open(self.images[-1]).resize((200, 200)))
+                self.hangman_image = ImageTk.PhotoImage(Image.open(f"hangman_{6 - self.tries}.png").resize((200, 200)))
                 self.label_hangman.config(image=self.hangman_image)
             else:
-                misses = 5 - self.tries
-                self.hangman_image = ImageTk.PhotoImage(Image.open(self.images[misses]).resize((200, 200)))
+                # Update the hangman image
+                self.hangman_image = ImageTk.PhotoImage(Image.open(f"hangman_{6 - self.tries}.png").resize((200, 200)))
                 self.label_hangman.config(image=self.hangman_image)
 
 root = Tk()
-mainmenu = PinPage(root)
+mainmenu = MainMenu(root)
 
 mainmenu.mainloop()
